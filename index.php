@@ -6,7 +6,6 @@ require_once 'fonctions.php';
 init_classes();
 
 //essais de connexion à la base de donnée.
-//lol
 test_sql();
 $auth = new auth();
 if (!$auth) {
