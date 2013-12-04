@@ -13,6 +13,24 @@ class auth {
             return "Invité";
         }
     }
+    private function get_groupName() {
+        if (!isset($_SESSION['Auth']['groupName'])) {
+            $bdd = get_db_connexion();
+            $requete = $bdd->prepare("SELECT INTO group WHEN id_group = :group");
+            $requete->execute(array (
+                "group" => $_SESSION['Auth']['group']
+            ));
+            $donnees = $requete->fetch();
+            if (isset($donnees['name'])) {
+               $_SESSION['Auth']['groupName'] = $donnees['name'];
+               return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
 
     public function login($user, $passwd, $cookie) { //loggue l'utilisateur avec email ou nom de compte et genere les cookies
         $bdd = get_db_connexion();
@@ -29,13 +47,17 @@ class auth {
                 $cookie_passwd = setcookie('passwd', $passwd);
             }
             if (!$cookie_user && !$cookie_passwd) {
-                return FALSE;
+                $return = FALSE;
             } else {
-                return TRUE;
+                $return = TRUE;
+            }
+            if (!$this->get_groupName()) {
+                $return = FALSE;
             }
         } else {
-            return FALSE;
+            $return = FALSE;
         }
+        return $return;
     }
 
     public function restore_session() {
