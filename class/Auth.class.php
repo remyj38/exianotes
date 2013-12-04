@@ -34,7 +34,7 @@ class auth {
         }
     }
 
-    function restore_session() {
+    public function restore_session() {
         if (isset($_COOKIE['user']) && isset($_COOKIE['passwd']) && !isset($_SESSION['Auth'])) {
             if ($this->login($_COOKIE['user'], $_COOKIE["passwd"], true)) {
                 return true;
