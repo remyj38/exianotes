@@ -25,10 +25,14 @@ class auth {
         if ($donnees['passwd'] == $this->crypt($passwd)) {
             $_SESSION['Auth'] = $donnees;
             if ($cookie) {
-                setcookie('user', $donnees['user']);
-                setcookie('passwd', $passwd);
+                $cookie_user = setcookie('user', $donnees['user']);
+                $cookie_passwd = setcookie('passwd', $passwd);
             }
-            return TRUE;
+            if (!$cookie_user && !$cookie_passwd) {
+                return FALSE;
+            } else {
+                return TRUE;
+            }
         } else {
             return FALSE;
         }
@@ -43,6 +47,19 @@ class auth {
             }
         } else {
             return false;
+        }
+    }
+
+    public function logout() {
+        $_SESSION['auth'] = NULL;
+        if (isset($_COOKIE['user']) && isset($_COOKIE['passwd'])) {
+            $user = setcookie("user", NULL, -1);
+            $passwd = setcookie("passwd", NULL, -1);
+        }
+        if ($user && $passwd) {
+            return TRUE;
+        } else {
+            return FALSE;
         }
     }
 
