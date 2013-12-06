@@ -7,7 +7,7 @@ init_classes();
 
 //essais de connexion à la base de donnée.
 test_sql();
-$auth = new auth();
+$auth = new auth(); //authentification...  
 if (!$auth) {
 }
 include 'header.php';
