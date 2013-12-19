@@ -35,28 +35,20 @@ function init_classes() { // Charges toutes les classes présentes dans le dossi
     closedir($dir);
 }
 
-function page() { // Récupère le nom de la page suivant l'url
-    $option = option();
-    $valeur = valeur();
-    if (($option != null) && ($valeur != null)) {
-
-
-        if ($option == erreur) {
-            $page = $remotedir . 'pagesErreurs/' . $valeur . '.php';
+function recupererArgumentsUrl() { // Récupère les arguments dans l'url
+    if (isset($_GET["url"])) {
+        $temp = explode("/", $_GET["url"]);
+        for ($i = 0; $i < count($temp); $i+=2) {
+            if ($temp[$i] != "") {
+                $param = strtolower($temp[$i]);
+                $valeur = strtolower($temp[$i+1]);
+                $urls[$param] = $valeur;
+            }
         }
-        if ($option == page) {
-            $page = $remotedir . 'pages/' . $valeur . '.php';
-        }
-        if ($option == action) {
-            $page = $remotedir . 'actions/' . $valeur . '.php';
-        }
-        if (!file_exists($page)) {
-            $page = $remotedir . 'pageserreur/404.php';
-        }
-        return $page;
     } else {
-        return 0;
+        $urls = NULL;
     }
+    return $urls;
 }
 
 function option() { // Récupère le premier argument dans l'url
@@ -87,14 +79,13 @@ function erreurs($id) { // Affiche les erreurs suivant le type
 }
 
 function register_ip($user) { // Sauvegarde l'ip utilisé à la connexion
-        $bdd = get_db_connexion();
-        $connexion = $bdd->prepare('INSERT INTO ip(user, time, ip) VALUES (:user, :time, :ip)');
-        $connexion->execute(array(
-            'user' => $user,
-            'time' => time(),
-            'ip' => $_SERVER['REMOTE_ADDR']
-        ));
-        
+    $bdd = get_db_connexion();
+    $connexion = $bdd->prepare('INSERT INTO ip(user, time, ip) VALUES (:user, :time, :ip)');
+    $connexion->execute(array(
+        'user' => $user,
+        'time' => time(),
+        'ip' => $_SERVER['REMOTE_ADDR']
+    ));
 }
 
 function afficher_login($erreur = 0) { // Affiche le formulaire de login
@@ -121,6 +112,6 @@ function afficher_login($erreur = 0) { // Affiche le formulaire de login
         </tr>
     </table>
 </form></center>';
-
 }
+
 ?>

@@ -10,7 +10,7 @@ class auth {
         if (isset($_SESSION['Auth']['user'])) {
             return $_SESSION['Auth']['user'];
         } else {
-            return "Invité";
+            return "Invite";
         }
     }
     private function get_groupName() { // Récupère le nom du groupe de l'utilisateur

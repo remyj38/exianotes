@@ -1,7 +1,7 @@
 <?php
 if (isset($_POST['passwd'])) {
     if ($auth->login($user, $passwd, $cookie))  {
-        header('Location: index.php');
+        header('Location: ../');
     } else {
         afficher_login(1);
     }
