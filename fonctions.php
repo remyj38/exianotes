@@ -19,7 +19,7 @@ function test_sql() { //test de la connexion à la bdd
     }
 }
 
-function init_classes() {
+function init_classes() { // Charges toutes les classes présentes dans le dossier class
     $dir_nom = './class';
     $dir = opendir($dir_nom);
     $fichier = array(); // on déclare le tableau contenant le nom des fichiers
@@ -35,7 +35,7 @@ function init_classes() {
     closedir($dir);
 }
 
-function page() {
+function page() { // Récupère le nom de la page suivant l'url
     $option = option();
     $valeur = valeur();
     if (($option != null) && ($valeur != null)) {
@@ -59,7 +59,7 @@ function page() {
     }
 }
 
-function option() {
+function option() { // Récupère le premier argument dans l'url
     $URL = $_SERVER['REQUEST_URI'];
     $optionpart1 = strlen(substr($URL, 0, -strlen(stristr($URL, '?'))) . '?');
     $optionpart2 = strlen($URL) - strlen(substr($URL, 0, -strlen(stristr($URL, '='))));
@@ -67,14 +67,14 @@ function option() {
     return $option;
 }
 
-function valeur() {
+function valeur() { // Recupère la valeur du premier argument de l'url
     $URL = $_SERVER['REQUEST_URI'];
     $valeur = strlen($URL) - strlen(stristr($URL, '=')) + 1;
     $valeur = substr($URL, $valeur);
     return $valeur;
 }
 
-function erreurs($id) {
+function erreurs($id) { // Affiche les erreurs suivant le type
     switch ($id) {
         case 403 :
             echo "Accès refusé !";
@@ -86,20 +86,18 @@ function erreurs($id) {
     return 1;
 }
 
-function register_ip($bdd, $auth) {
-    if (!isset($_SESSION['new'])) {
+function register_ip($user) { // Sauvegarde l'ip utilisé à la connexion
         $bdd = get_db_connexion();
         $connexion = $bdd->prepare('INSERT INTO ip(user, time, ip) VALUES (:user, :time, :ip)');
         $connexion->execute(array(
-            'user' => $auth->getUser(),
+            'user' => $user,
             'time' => time(),
             'ip' => $_SERVER['REMOTE_ADDR']
         ));
-        $_SESSION['new'] = true;
-    }
+        
 }
 
-function afficher_login($erreur = 0) {
+function afficher_login($erreur = 0) { // Affiche le formulaire de login
     echo '<center>Merci de vous authentifier :';
     if ($erreur) {
         echo '<span class="login_erreur">Echec d\'authentification.<br>Merci de réessayer !</span>';

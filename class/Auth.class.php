@@ -2,18 +2,18 @@
 
 class auth {
 
-    private function crypt($passwd) {
+    private function crypt($passwd) { // Crypte le mot de passe entré
         return sha1(md5($passwd));
     }
 
-    public function getUser() {
+    public function getUser() { // Récupère le nom d'utilisateur
         if (isset($_SESSION['Auth']['user'])) {
             return $_SESSION['Auth']['user'];
         } else {
             return "Invité";
         }
     }
-    private function get_groupName() {
+    private function get_groupName() { // Récupère le nom du groupe de l'utilisateur
         if (!isset($_SESSION['Auth']['groupName'])) {
             $bdd = get_db_connexion();
             $requete = $bdd->prepare("SELECT INTO group WHEN id_group = :group");
@@ -41,7 +41,9 @@ class auth {
         ));
         $donnees = $requete->fetch();
         if ($donnees['passwd'] == $this->crypt($passwd)) {
+            $return = TRUE;
             $_SESSION['Auth'] = $donnees;
+            register_ip($this->getUser());
             if ($cookie) {
                 $cookie_user = setcookie('user', $donnees['user']);
                 $cookie_passwd = setcookie('passwd', $passwd);
@@ -60,7 +62,7 @@ class auth {
         return $return;
     }
 
-    public function restore_session() {
+    public function restore_session() { // réstore la session a partir des cookies
         if (isset($_COOKIE['user']) && isset($_COOKIE['passwd']) && !isset($_SESSION['Auth'])) {
             if ($this->login($_COOKIE['user'], $_COOKIE["passwd"], true)) {
                 return true;
