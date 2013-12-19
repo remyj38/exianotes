@@ -35,13 +35,13 @@ function init_classes() { // Charges toutes les classes présentes dans le dossi
     closedir($dir);
 }
 
-function recupererArgumentsUrl() { // Récupère les arguments dans l'url
+function getArgumentsUrl() { // Récupère les arguments dans l'url
     if (isset($_GET["url"])) {
         $temp = explode("/", $_GET["url"]);
         for ($i = 0; $i < count($temp); $i+=2) {
             if ($temp[$i] != "") {
                 $param = strtolower($temp[$i]);
-                $valeur = strtolower($temp[$i+1]);
+                $valeur = strtolower($temp[$i + 1]);
                 $urls[$param] = $valeur;
             }
         }
@@ -88,13 +88,13 @@ function register_ip($user) { // Sauvegarde l'ip utilisé à la connexion
     ));
 }
 
-function afficher_login($erreur = 0) { // Affiche le formulaire de login
-    echo '<center>Merci de vous authentifier :';
+function afficher_login($page_content, $erreur = 0) { // Affiche le formulaire de login
+    $page_content.= '<center>Merci de vous authentifier :';
     if ($erreur) {
-        echo '<span class="login_erreur">Echec d\'authentification.<br>Merci de réessayer !</span>';
+        $page_content.= '<span class="login_erreur">Echec d\'authentification.<br>Merci de réessayer !</span>';
     }
-    echo '<form action="' . ROOT_DIR . '" method="post">';
-    echo '
+    $page_content.= '<form action="' . ROOT_DIR . '" method="post">';
+    $page_content.= '
     <table id="login">
         <tr>
             <td>
@@ -114,4 +114,5 @@ function afficher_login($erreur = 0) { // Affiche le formulaire de login
 </form></center>';
 }
 
+return $page_content;
 ?>

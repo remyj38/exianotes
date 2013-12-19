@@ -34,10 +34,10 @@ class auth {
 
     public function login($user, $passwd, $cookie) { //loggue l'utilisateur avec email ou nom de compte et genere les cookies
         $bdd = get_db_connexion();
-        $requete = $bdd->prepare("SELECT INTO users WHEN user = :user OR email = :email");
+        $requete = $bdd->prepare('SELECT * FROM users WHERE user = :user OR email = :email');
         $requete->execute(array(
-            "user" => $user,
-            "email" => $user
+            'user' => $user,
+            'email' => $user
         ));
         $donnees = $requete->fetch();
         if ($donnees['passwd'] == $this->crypt($passwd)) {
