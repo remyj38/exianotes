@@ -4,6 +4,7 @@ session_start();
 require_once 'config.php';
 require_once 'fonctions.php';
 init_classes();
+$site = getSiteInfos();
 $page_content = ""; // Initialisation du contenu de la page
 $argumentsUrl = getArgumentsUrl(); // Récupération des arguments dans un tableau
 
@@ -20,12 +21,14 @@ if ($auth->getUser() == "Invite" && $argumentsUrl["page"] != "login") { // Si l'
     if ($argumentsUrl["page"] == "admin") { // Si la page demandée est l'administration, on inclus le dossier administration
         include ROOT_DIR . "administration/index.php";
     } else {
-        if (isset($argumentsUrl['page'])) {
-            if (file_exists(ROOT_DIR . 'pages/' . $argumentsUrl['page'] . '.php')) {
-                include ROOT_DIR . 'pages/' . $argumentsUrl['page'] . '.php';
-            } else {
-                
+        if (isset($argumentsUrl['page'])) { // Si l'argument page est inclu dans l'url
+            if (file_exists('pages/' . $argumentsUrl['page'] . '.php')) { // et si la page demandée existe, on l'inclu
+                include 'pages/' . $argumentsUrl['page'] . '.php';
+            } else { // Sinon, on affiche l'erreur 404
+                errors(404);
             }
+        } else { // Sinon, on affiche la page par défaut
+            include 'pages/resume.php';
         }
     }
 }

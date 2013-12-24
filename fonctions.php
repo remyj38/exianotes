@@ -66,7 +66,8 @@ function valeur() { // Recupère la valeur du premier argument de l'url
     return $valeur;
 }
 
-function erreurs($id) { // Affiche les erreurs suivant le type
+function errors($id) { // Affiche les erreurs suivant le type
+    global $title;
     switch ($id) {
         case 403 :
             echo "Accès refusé !";
@@ -75,25 +76,26 @@ function erreurs($id) { // Affiche les erreurs suivant le type
             echo "Page introuvable :(";
             break;
     }
+    $title = "Erreur " . $id;
     return 1;
 }
 
 function register_ip($user) { // Sauvegarde l'ip utilisé à la connexion
     $bdd = get_db_connexion();
-    $connexion = $bdd->prepare('INSERT INTO ip(user, time, ip) VALUES (:user, :time, :ip)');
+    $connexion = $bdd->prepare('INSERT INTO ip(user, ip) VALUES (:user, :ip)');
     $connexion->execute(array(
         'user' => $user,
-        'time' => time(),
         'ip' => $_SERVER['REMOTE_ADDR']
     ));
 }
 
-function afficher_login($page_content, $erreur = 0) { // Affiche le formulaire de login
+function afficher_login($erreur = FALSE) { // Affiche le formulaire de login
+    global $page_content;
     $page_content.= '<center>Merci de vous authentifier :';
     if ($erreur) {
-        $page_content.= '<span class="login_erreur">Echec d\'authentification.<br>Merci de réessayer !</span>';
+        $page_content.= '<span class="login_erreur">Echec d\'authentification.<br>Merci de r&eacute;essayer !</span>';
     }
-    $page_content.= '<form action="' . ROOT_DIR . '" method="post">';
+    $page_content.= '<form action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
     $page_content.= '
     <table id="login">
         <tr>
@@ -107,12 +109,27 @@ function afficher_login($page_content, $erreur = 0) { // Affiche le formulaire d
             <td>
                 <label for="passwd">Mot de passe</label>
             </td><td>
-                <input name="passwd" type="passwd" required />
+                <input name="passwd" type="password" required />
+            </td>
+        </tr>
+        <tr>
+            <td colspan=2>
+                <input name="cookie" id="cookie" type="checkbox" checked/> <label for="cookie">Rester connecter</label>
+            </td>
+        </tr>
+        <tr>
+            <td colspan=2>
+                <input type="submit" value="Se Connecter" />
             </td>
         </tr>
     </table>
 </form></center>';
 }
 
-return $page_content;
+function getSiteInfos() {
+    $bdd = get_db_connexion();
+    $result = $bdd->query("SELECT * FROM infos");
+    $datas = $result->fetch();
+    return $datas;
+}
 ?>
