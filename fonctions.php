@@ -5,8 +5,10 @@ function get_db_connexion() { //Connexion à la bdd
         $bdd = new PDO(DB_DNS, DB_USER, DB_PASSWD);
         return $bdd;
     } catch (Exception $e) {
-
-        return "failed";
+        include 'header.php';
+        echo "<center>Connexion à la base de donnée impossible</center>";
+        include 'footer.php';
+        exit();
     }
 }
 
@@ -39,31 +41,19 @@ function getArgumentsUrl() { // Récupère les arguments dans l'url
     if (isset($_GET["url"])) {
         $temp = explode("/", $_GET["url"]);
         for ($i = 0; $i < count($temp); $i+=2) {
-            if ($temp[$i] != "") {
+            if (isset($temp[$i]) && isset($temp[$i + 1])) {
                 $param = strtolower($temp[$i]);
                 $valeur = strtolower($temp[$i + 1]);
                 $urls[$param] = $valeur;
             }
         }
+        if (!isset($urls)) {
+            return 404;
+        }
     } else {
-        $urls = NULL;
+        return NULL;
     }
     return $urls;
-}
-
-function option() { // Récupère le premier argument dans l'url
-    $URL = $_SERVER['REQUEST_URI'];
-    $optionpart1 = strlen(substr($URL, 0, -strlen(stristr($URL, '?'))) . '?');
-    $optionpart2 = strlen($URL) - strlen(substr($URL, 0, -strlen(stristr($URL, '='))));
-    $option = substr($URL, $optionpart1, -$optionpart2);
-    return $option;
-}
-
-function valeur() { // Recupère la valeur du premier argument de l'url
-    $URL = $_SERVER['REQUEST_URI'];
-    $valeur = strlen($URL) - strlen(stristr($URL, '=')) + 1;
-    $valeur = substr($URL, $valeur);
-    return $valeur;
 }
 
 function errors($id) { // Affiche les erreurs suivant le type
@@ -132,4 +122,5 @@ function getSiteInfos() {
     $datas = $result->fetch();
     return $datas;
 }
+
 ?>
