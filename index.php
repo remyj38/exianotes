@@ -31,11 +31,10 @@ if ($auth->getUser() == "Invite" && !isset($argumentsUrl["page"])) { // Si l'uti
             }
         }
     } else { // Sinon, on affiche la page par défaut
-        if ($argumentsUrl==404)
-        {
+        if ($argumentsUrl == 404) {
             errors(404);
         } else {
-        include 'pages/resume.php';
+            include 'pages/resume.php';
         }
     }
 }
