@@ -5,6 +5,8 @@ function get_db_connexion() { //Connexion à la bdd
         $bdd = new PDO(DB_DNS, DB_USER, DB_PASSWD);
         return $bdd; // Si connexion réussie, retour du PDO
     } catch (Exception $e) { // Sinon, affichage d'un message d'erreur
+        $site['name'] = "Erreur";
+        $title = "Echec de connexion à la base de donnée !";
         include 'header.php';
         echo "<center>Connexion à la base de donnée impossible</center>";
         include 'footer.php';
@@ -122,6 +124,11 @@ function getSiteInfos() { // Récupération des infos sur le site (nom, mail du 
     $result = $bdd->query("SELECT * FROM infos");
     $datas = $result->fetch();
     return $datas;
+}
+
+function generateReinitKey($user) { // Génère une clé de réinitialisation de mot de passe aléatoirement
+    $user .= uniqid();
+    return md5($user);
 }
 
 ?>
