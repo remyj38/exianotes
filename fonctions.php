@@ -59,6 +59,7 @@ function getArgumentsUrl() { // Récupère les arguments dans l'url
 
 function errors($id) { // Affiche les erreurs suivant le type
     global $title;
+    global $page_content;
     switch ($id) { // Suivant l'id de l'erreur, on retourne le message d'erreur
         case 403 :
             $page_content = "Accès refusé !";

@@ -1,11 +1,12 @@
 <?php
+require_once 'administration/fonctions.php';
 $title = "Adminsitration";
 if (!$auth) {
-    echo 'Accès interdit';
-    exit();
+    error(403);
+} else {
+    if (!$auth->isAdmin()) {
+        error(403);
+    } else {
+    }
 }
-if (!$auth->isAdmin()) {
-    
-}
-
 ?>
