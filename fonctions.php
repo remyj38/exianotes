@@ -48,6 +48,9 @@ function getArgumentsUrl() { // Récupère les arguments dans l'url
                 }
             }
         }
+        if (isset($urls['admin']) && !isset($urls['page'])) {
+            $urls['page'] = 'admin';
+        }
         if (!isset($urls)) { // Si le tableau est vide, on retourne une page 404
             return 404;
         }
@@ -55,6 +58,15 @@ function getArgumentsUrl() { // Récupère les arguments dans l'url
         return NULL;
     }
     return $urls; // On retourne le tableau créé
+}
+
+function init_theme(){
+    global $template;
+    if (isset($_SESSION['Auth']['theme_dir'])) {
+        $template['themedir']=$_SESSION['Auth']['theme_dir'];
+    } else {
+        $template['themedir']='default';
+    }
 }
 
 function errors($id) { // Affiche les erreurs suivant le type
@@ -74,23 +86,24 @@ function errors($id) { // Affiche les erreurs suivant le type
     return 1;
 }
 
-function register_ip($user) { // Sauvegarde l'ip utilisé à la connexion
+function register_ip() { // Sauvegarde l'ip utilisé à la connexion
     $bdd = get_db_connexion();
-    $connexion = $bdd->prepare('INSERT INTO ip(user, ip) VALUES (:user, :ip)'); // Insertion dans la BDD de l'ip
+    $connexion = $bdd->prepare('INSERT INTO ips (user, ip) VALUES (:user, :ip)'); // Insertion dans la BDD de l'ip
     $connexion->execute(array(
-        'user' => $user,
+        'user' => $_SESSION['Auth']['id_user'],
         'ip' => $_SERVER['REMOTE_ADDR']
     ));
 }
 
 function afficher_login($erreur = FALSE) { // Affiche le formulaire de login
     global $page_content;
-    $page_content.= '<center>Merci de vous authentifier :';
+    global $template;
     if ($erreur) { // En cas d'echec d'authentification, on affiche qu'il y a une erreur
         $page_content.= '<span class="login_erreur">Echec d\'authentification.<br>Merci de r&eacute;essayer !</span>';
     }
-    $page_content.= '<form action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
-    $page_content.= '
+    $page_content.= '<center>Merci de vous authentifier :';
+    
+    $page_content.= '<form action="' . $_SERVER['REQUEST_URI'] . '" method="post">
     <table id="login">
         <tr>
             <td>

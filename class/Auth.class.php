@@ -4,7 +4,9 @@ class auth {
 
     public function __construct() {
         if (!isset($_SESSION['Auth'])) {
-            $this->restore_session();
+            if (!$this->restore_session()) {
+                return NULL;
+            }
         }
     }
 
@@ -47,20 +49,20 @@ class auth {
     public function login($user, $passwd, $cookie = 0, $restore = FALSE) { //loggue l'utilisateur avec email ou nom de compte et genere les cookies
         global $site;
         $bdd = get_db_connexion();
-        $requete = $bdd->prepare('SELECT id, user, email, theme, rank, groups, name, firstname FROM users WHERE (user = :user OR email = :email) AND passwd = :passwd'); // Récupération des infos sur l'utilisateur en utilisant le pseudo ou le mail
+        $requete = $bdd->prepare('SELECT id_user, user, email, theme, rank, groups, users.name, firstname, themes.dir AS theme_dir FROM users JOIN themes ON users.theme=themes.id_theme WHERE (user = :user OR email = :email) AND passwd = :passwd'); // Récupération des infos sur l'utilisateur en utilisant le pseudo ou le mail
         $requete->execute(array(
             'user' => $user,
             'email' => $user,
             'passwd' => $this->crypt($passwd)
         ));
         $donnees = $requete->fetch();
-        if (isset($donnees)) { // Récupération de la première ligne
+        if (isset($donnees['id_user'])) { // Récupération de la première ligne
             $return = TRUE;
             $_SESSION['Auth'] = $donnees; // On garde les données récoltées dans la session
-            register_ip($this->getUser()); // On enregistre l'ip du visiteur
+            register_ip(); // On enregistre l'ip du visiteur
             if ($cookie && !$restore) { // Si on a demandée la connexion avec cookies, on les enregistre
-                $cookie_user = setcookie('user', $donnees['user'], time() + 31536000, $site['installDir']);
-                $cookie_passwd = setcookie('passwd', $donnees['passwd'], time() + 31536000, $site['installDir']);
+                $cookie_user = setcookie('user', $donnees['user'], time() + 31536000, $site['installed_dir']);
+                $cookie_passwd = setcookie('passwd', $donnees['passwd'], time() + 31536000, $site['installed_dir']);
                 if (!$cookie_user || !$cookie_passwd) {
                     $return = FALSE;
                 }
@@ -72,7 +74,6 @@ class auth {
         } else {
             $return = FALSE;
         }
-        unset($bdd);
         return $return;
     }
 
@@ -111,7 +112,7 @@ class auth {
 
     private function getRankName($id) { // Permet de récuperer le nom du rang
         $bdd = get_db_connexion(); //Ouvre la connexion à la base de donnée
-        $requete = $bdd->prepare('SELECT name FROM rank WHERE id_rank = :id');
+        $requete = $bdd->prepare('SELECT name FROM ranks WHERE id_rank = :id');
         $requete->execute(array("id" => $id));
         $donnee = $requete->fetch();
         unset($bdd);

@@ -1,0 +1,9 @@
+/* Table de la page de login */
+#login {
+    
+} 
+
+/* Classe du message d'erreur affiché en cas de problème de login */
+.login_erreur {
+    color: red;
+}

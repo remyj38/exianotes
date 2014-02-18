@@ -12,11 +12,18 @@ $argumentsUrl = getArgumentsUrl(); // Récupération des arguments dans un table
 test_sql();
 
 $auth = new auth(); //authentification...
+//Initialisation du thème de l'utilisateur
 
+init_theme();
 
-
-if ($auth->getUser() == "Invite" && !isset($argumentsUrl["page"])) { // Si l'utilisateur n'est pas authentifié et que la page actuelle n'est pas celle de login, on le redirige dessus
-    if ($argumentsUrl["page"] != "login") {
+if ($auth->getUser() == "Invite") { //Si l'utilisateur n'est pas authentifié
+    if (isset($argumentsUrl["page"])) { //  et que la page actuelle n'est pas celle de login, on le redirige dessus
+        if ($argumentsUrl["page"] != "login") {
+            header('Location: ' . ROOT_DIR . 'page/login/');
+        } else {
+            include 'pages/' . $argumentsUrl['page'] . '.php'; 
+        }
+    } else {
         header('Location: ' . ROOT_DIR . 'page/login/');
     }
 } else {
@@ -39,7 +46,7 @@ if ($auth->getUser() == "Invite" && !isset($argumentsUrl["page"])) { // Si l'uti
     }
 }
 // Affichage de la page
-include 'header.php';
+include './themes/' . $template['themedir'] . '/header.php';
 echo $page_content;
-include 'footer.php';
+include './themes/' . $template['themedir'] . '/footer.php';
 ?>

@@ -1,0 +1,8 @@
+/* Tableau contenant la liste des utilisateurs */
+#usersList{
+    border-collapse: collapse;
+}
+/* Cases du tableau ci-dessus */
+#usersList th, #usersList td {
+    border: 1px solid black;
+}
