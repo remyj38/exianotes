@@ -60,12 +60,12 @@ function getArgumentsUrl() { // Récupère les arguments dans l'url
     return $urls; // On retourne le tableau créé
 }
 
-function init_theme(){
+function init_theme() {
     global $template;
     if (isset($_SESSION['Auth']['theme_dir'])) {
-        $template['themedir']=$_SESSION['Auth']['theme_dir'];
+        $template['themedir'] = $_SESSION['Auth']['theme_dir'];
     } else {
-        $template['themedir']='default';
+        $template['themedir'] = 'default';
     }
 }
 
@@ -86,13 +86,48 @@ function errors($id) { // Affiche les erreurs suivant le type
     return 1;
 }
 
+function get_ip() {
+    // IP si internet partagé
+    if (isset($_SERVER['HTTP_CLIENT_IP'])) {
+        return $_SERVER['HTTP_CLIENT_IP'];
+    }
+    // IP derrière un proxy
+    elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        return $_SERVER['HTTP_X_FORWARDED_FOR'];
+    }
+    // Sinon : IP normale
+    else {
+        return (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '');
+    }
+}
+
 function register_ip() { // Sauvegarde l'ip utilisé à la connexion
     $bdd = get_db_connexion();
-    $connexion = $bdd->prepare('INSERT INTO ips (user, ip) VALUES (:user, :ip)'); // Insertion dans la BDD de l'ip
+    $ip = get_ip();
+    $connexion = $bdd->prepare('INSERT INTO ips (user, ip, host_name) VALUES (:user, :ip, :host);'); // Insertion dans la BDD de l'ip
     $connexion->execute(array(
         'user' => $_SESSION['Auth']['id_user'],
-        'ip' => $_SERVER['REMOTE_ADDR']
+        'ip' => $ip,
+        'host' => gethostbyaddr($ip)
     ));
+    $connexion->closeCursor();
+    deleteIps();
+}
+
+function deleteIps() { // Supprime les ips en trop (20 ips gardées)
+    $bdd = get_db_connexion(); // Ouverture de la connexion à la BDD
+    $connexion = $bdd->prepare('SELECT id_ip FROM ips WHERE user = :user ORDER BY id_ip ASC;'); // Préparation de la requete de selection des ips
+    $connexion->execute(array('user' => $_SESSION['Auth']['id_user'])); // Execution de la requete
+    $i = 0;
+    while ($donnee = $connexion->fetch()) { // On stoque les id d'ips de facon simple
+        $ips[$i] = $donnee['id_ip'];
+        $i++;
+    }
+    $connexion->closeCursor();
+    for ($i = 0; $i < (count($ips) - 20); $i++) { // Pour chaque ip qui n'est pas dans les 20 dernieres, on la supprime
+        $connexion = $bdd->prepare('DELETE FROM ips WHERE id_ip = :id'); // Préparation de la requete de selection de l'ip
+        $connexion->execute(array('id' => $ips[$i])); // Execution de la requete
+    }
 }
 
 function afficher_login($erreur = FALSE) { // Affiche le formulaire de login
@@ -102,7 +137,7 @@ function afficher_login($erreur = FALSE) { // Affiche le formulaire de login
         $page_content.= '<span class="login_erreur">Echec d\'authentification.<br>Merci de r&eacute;essayer !</span>';
     }
     $page_content.= '<center>Merci de vous authentifier :';
-    
+
     $page_content.= '<form action="' . $_SERVER['REQUEST_URI'] . '" method="post">
     <table id="login">
         <tr>

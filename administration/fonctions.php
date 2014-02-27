@@ -148,4 +148,28 @@ function getRanks() { // Permet de récuperer tous les rangs dans un tableau
     }
 }
 
+function errorsSQL($error, $requete) { // Permet d'afficher l'erreur SQL survenue
+    global $page_content;
+    global $adminMails;
+    if (!$error) { // S'il y a eu une erreur sur la requete d'insertion, on récupère ses infos
+                $erreurs = $requete->errorInfo(); // Récupère les infos sur l'erreur dans le but de les envoyer au développeur
+                $error = $erreurs[1]; // Enregistre le numéro d'erreur dans la variable erreur
+            }
+            switch ($error) { // Suivant le code d'erreur de l'erreur, on affiche le message correspondant
+                case 1062:
+                    $page_content .= '<span class="sql_erreur">Le nom d\'utilisateur ou l\'email est déjà utilisé</span>';
+                    break;
+                case 'champs':
+                    $page_content .= '<span class="sql_erreur">Merci de remplir tous les champs !</span>';
+                    break;
+                case 'mail':
+                    $page_content .= '<span class="sql_erreur">Echec lors de l\'envoi du mail !</span>';
+                    break;
+                default:
+                    $page_content .= '<span class="sql_erreur">Erreur inconnue !</span><br />L\'erreur vient d\'être rapportée au développeur !';
+                    $adminMails->reportSQLError($errors);
+                    break;
+            }
+}
+
 ?>

@@ -6,3 +6,28 @@
 #usersList th, #usersList td {
     border: 1px solid black;
 }
+/* erreuru affiché si aucun id n'est selectionné */
+#no_id {
+    
+}
+/* Affichage d'une erreur SQL */
+.sql_erreur {
+    
+}
+/* Table des infos de l'utilisateur */
+#info_user{
+    border-collapse: collapse;
+}
+/* Cases du tableau ci-dessus */
+#info_user th, #info_user td {
+    border: 1px solid black;
+}
+/* Message d'affichage d'une réinitialisation de mot de passe ou changement d'email */
+#info_reinit_passwd, #info_change_email {
+    
+}
+
+/* Messages affichés lors d'erreurs */
+.error {
+    color: red;
+}

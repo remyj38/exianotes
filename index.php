@@ -1,5 +1,5 @@
 <?php
-
+header('Content-Type: text/html;charset=UTF-8');
 // Initialisation
 session_start();
 require_once 'config.php';

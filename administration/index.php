@@ -1,5 +1,7 @@
 <?php
 require_once 'administration/fonctions.php';
+require_once 'mail.class.php';
+$adminMails = new mail();
 $title = "Adminsitration";
 $adminCssOn = true;
 if (!$auth) {
