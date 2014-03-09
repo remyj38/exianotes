@@ -1,6 +1,4 @@
 <?php
-echo '<a href="' . $_SERVER['REQUEST_URI'] . '/users/action/add">add</a>
-<a href="' . $_SERVER['REQUEST_URI'] . '/users/action/modify">edit</a>
-<a href="' . $_SERVER['REQUEST_URI'] . '/users/action/delete">delete</a>
-<a href="' . $_SERVER['REQUEST_URI'] . '/users/action/other">other</a>'; 
-?>
+$page_content .= '<table id="admin_home"><tr><td><a href="' . ROOT_DIR . 'admin/config"><img src="' . ROOT_DIR . 'themes/images/comingsoon.gif" alt="Prochainement !" />Configuration du site</a></td><td><a href="' . ROOT_DIR . 'admin/config"><img src="' . ROOT_DIR . 'themes/images/comingsoon.gif" alt="Prochainement !" />Thèmes</td></tr>';
+$page_content .= '<tr><td><a href="' . ROOT_DIR . 'admin/users"><img src="' . ROOT_DIR . 'themes/images/users.png" alt="Utilisateurs" />Utilisateurs</a></td><td><a href="' . ROOT_DIR . 'admin/groups"><img src="' . ROOT_DIR . 'themes/images/groups.png" alt="Promotions !" />Promotions</td></tr>';
+$page_content .= '<tr><td><a href="' . ROOT_DIR . 'admin/modules"><img src="#" alt="Image a trouver!" />Unitées d\'enseignement</a></td><td><a href="' . ROOT_DIR . 'admin/controls"><img src="' . ROOT_DIR . 'themes/images/controls.jpg" alt="Contrôles !" />Contrôles</td></tr>';

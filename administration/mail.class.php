@@ -6,10 +6,10 @@ class mail {
 
     public function __construct() {
         global $site;
-        $this->expediteur = $site['name'] . "<" . $site['admin_email'] . ">";
+        $this->expediteur = $site['name'] . "<" . $site['admin_email'] . ">"; // Définition de l'expéditeur
     }
 
-    public function mailAdd($user) {
+    public function mailAdd($user) { // Mail envoyé lors d'une création d'utilisateur
         global $site;
         $sujetMail = "Nouveau compte sur " . $site['name']; // Initialise le sujet du mail
         $corpsMail = "Bonjour " . $user['Uname'] . " " . $user['firstName'] . "<br />
@@ -25,7 +25,7 @@ Afin de choisir votre mot de passe et valider votre compte, merci de cliquer sur
         $headersmail .= "MIME-Version: 1.0 ";
         return mail($user['email'], $sujetMail, $corpsMail, $headersmail); // Envoi du mail
     }
-    public function mailReinitPasswd($infos) {
+    public function mailReinitPasswd($infos) { // Mail envoyé lors d'une réinitialisation de mot de passe
         global $site;
         $sujetMail = "Réinitialisation de votre mot de passe"; // Initialise le sujet du mail
         $corpsMail = "Bonjour " . $infos['name'] . " " . $infos['firstName'] . "<br />
@@ -39,7 +39,7 @@ Afin de choisir votre nouveau mot de passe et pouvoir de nouveau vous connecter 
         $headersmail = "From: " . $this->expediteur . "\r\n"; // Expéditeur du message
         $headersmail .= "Content-Type: text/html; charset=utf-8 \r\n"; // Type de mail (html)
         $headersmail .= "MIME-Version: 1.0 ";
-        return mail($user['email'], $sujetMail, $corpsMail, $headersmail); // Envoi du mail
+        return mail($infos['email'], $sujetMail, $corpsMail, $headersmail); // Envoi du mail
     }
     
     

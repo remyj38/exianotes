@@ -1,10 +1,13 @@
 /* Tableau contenant la liste des utilisateurs */
-#usersList{
+#usersList table{
     border-collapse: collapse;
 }
 /* Cases du tableau ci-dessus */
 #usersList th, #usersList td {
     border: 1px solid black;
+}
+#usersList{
+    text-align: center;
 }
 /* erreuru affiché si aucun id n'est selectionné */
 #no_id {
@@ -15,19 +18,50 @@
     
 }
 /* Table des infos de l'utilisateur */
-#info_user{
+#info_user, #ips_user{
     border-collapse: collapse;
 }
 /* Cases du tableau ci-dessus */
-#info_user th, #info_user td {
+#info_user th, #info_user td, #ips_user th, #ips_user td {
     border: 1px solid black;
+    padding: 0 5px;
 }
 /* Message d'affichage d'une réinitialisation de mot de passe ou changement d'email */
 #info_reinit_passwd, #info_change_email {
     
 }
 
-/* Messages affichés lors d'erreurs */
-.error {
-    color: red;
+/* Options de modifications des utilisateurs */
+#optionsUsers{
+    text-align: center;
+}
+
+/* classe des boutons dans l'administration */
+.admin{
+    
+}
+ /* classe des sections sur les infos sur l'utilisateur */
+.infos{
+    vertical-align: middle;
+    display : inline-block;
+}
+.infos article {
+    padding: 10px;
+}
+
+/* Classe des zones contenant des boutons */
+.buttons {
+    display: block;
+}
+/* Accueil de l'administration */
+
+#admin_home {
+    text-align: center;
+}
+
+#admin_home img{
+    margin: auto;
+    display: block;
+    width: 48px;
+    height: 48px;
 }

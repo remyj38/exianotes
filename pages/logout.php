@@ -1,9 +1,9 @@
 <?php
 $title = "Déconnexion";
 if ($auth->logout()) {
-    echo "déconnecté";
+    $page_content .= "déconnecté";
 } else {
-    echo "echec de la déconnection";
+    $page_content .= "echec de la déconnection";
 }
 
 ?>

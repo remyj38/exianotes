@@ -46,15 +46,23 @@ class auth {
         }
     }
 
-    public function login($user, $passwd, $cookie = 0, $restore = FALSE) { //loggue l'utilisateur avec email ou nom de compte et genere les cookies
+    public function login($user, $passwd, $cookie = false, $restore = FALSE) { //loggue l'utilisateur avec email ou nom de compte et genere les cookies
         global $site;
         $bdd = get_db_connexion();
         $requete = $bdd->prepare('SELECT id_user, user, email, theme, rank, groups, users.name, firstname, themes.dir AS theme_dir FROM users JOIN themes ON users.theme=themes.id_theme WHERE (user = :user OR email = :email) AND passwd = :passwd'); // Récupération des infos sur l'utilisateur en utilisant le pseudo ou le mail
-        $requete->execute(array(
-            'user' => $user,
-            'email' => $user,
-            'passwd' => $this->crypt($passwd)
-        ));
+        if ($restore) {
+            $requete->execute(array(
+                'user' => $user,
+                'email' => $user,
+                'passwd' => $passwd
+            ));
+        } else {
+            $requete->execute(array(
+                'user' => $user,
+                'email' => $user,
+                'passwd' => $this->crypt($passwd)
+            ));
+        }
         $donnees = $requete->fetch();
         if (isset($donnees['id_user'])) { // Récupération de la première ligne
             $return = TRUE;
@@ -62,7 +70,7 @@ class auth {
             register_ip(); // On enregistre l'ip du visiteur
             if ($cookie && !$restore) { // Si on a demandée la connexion avec cookies, on les enregistre
                 $cookie_user = setcookie('user', $donnees['user'], time() + 31536000, $site['installed_dir']);
-                $cookie_passwd = setcookie('passwd', $donnees['passwd'], time() + 31536000, $site['installed_dir']);
+                $cookie_passwd = setcookie('passwd', $this->crypt($passwd), time() + 31536000, $site['installed_dir']);
                 if (!$cookie_user || !$cookie_passwd) {
                     $return = FALSE;
                 }
@@ -93,8 +101,8 @@ class auth {
         global $site;
         session_destroy(); // On détruit la session
         if (isset($_COOKIE['user']) && isset($_COOKIE['passwd'])) { //Si les cookies sont définis, on les supprime
-            $user = setcookie('user', NULL, -1, $site['installDir']);
-            $passwd = setcookie('passwd', NULL, -1, $site['installDir']);
+            $user = setcookie('user', NULL, -1, $site['installed_dir']);
+            $passwd = setcookie('passwd', NULL, -1, $site['installed_dir']);
             if (!$user || !$passwd) { // Si la suppression a échouée, retourne faux
                 return FALSE;
             }

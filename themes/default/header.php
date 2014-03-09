@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
     <head>
         <title><?php echo $site['name'] . " | " . $title; ?></title> <!-- Affichage sous forme nom du site | nom de la page !-->
@@ -10,3 +10,4 @@
         ?>
     </head>
     <body>
+        <div id="page">
