@@ -160,9 +160,10 @@ class admin_users {
     private function getIps($user, $nombre = 10) { // récupère les ips d'un utilisateur (par défaut : 10 ips)
         $i = 0;
         $bdd = get_db_connexion(); //Ouverture de la connexion
-        $requete = $bdd->prepare('SELECT DATE_FORMAT(date_ip, \'%e-%m-%Y %H:%i:%s\') AS date_ip, ip, host_name FROM ips WHERE user = :id ORDER BY date_ip DESC LIMIT 0, 10;'); // Execution de la requête
+        $requete = $bdd->prepare('SELECT UNIX_TIMESTAMP(date_ip) AS date_ip, ip, host_name FROM ips WHERE user = :id ORDER BY date_ip DESC LIMIT 0, 10;'); // Execution de la requête
         $requete->execute(array('id' => $user));
         while ($temp = $requete->fetch()) { // Pour chaque enregistrement, on l'enregistre
+            $temp['date_ip'] = date("d-m-Y  à G:i:s", $temp['date_ip']);
             $datas[$i] = $temp;
             $i++;
         }

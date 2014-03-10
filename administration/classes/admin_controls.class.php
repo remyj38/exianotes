@@ -256,7 +256,7 @@ class admin_controls {
     <tr><td><label for="module">Module du controle:</label></td><td><select id="module" name="module">';
             for ($i = 0; $i < count($modules); $i++) { // Affichage de la liste des modules
                 $page_content .= '<option value="' . $modules[$i]['id_module'] . '"';
-                if ($infos['module'] == $modules[$i]['id_module']) {
+                if ($infos['id_module'] == $modules[$i]['id_module']) {
                     $page_content .= ' selected ';
                 }
                 $page_content .= '>' . $modules[$i]['name'] . '</option>';

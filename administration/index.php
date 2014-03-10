@@ -1,7 +1,7 @@
 <?php
 
 require_once 'administration/fonctions.php'; // On inclu les fonctions d'administration
-require_once 'mail.class.php'; // On inclu les fonctions de mail
+require_once 'classes/mail.class.php'; // On inclu les fonctions de mail
 $adminMails = new mail(); // On crée l'objet des mails
 $title = "Adminsitration";
 $adminCssOn = true; // On active le CSS et script js de l'administration

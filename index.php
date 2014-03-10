@@ -18,13 +18,15 @@ init_theme(); //Initialisation du thème de l'utilisateur
 
 if ($auth->getUser() == "Invite") { //Si l'utilisateur n'est pas authentifié
     if (isset($argumentsUrl["page"])) { //  et que la page actuelle n'est pas celle de login, on le redirige dessus
-        if ($argumentsUrl["page"] != "login") {
-            header('Location: ' . ROOT_DIR . 'page/login/');
+        if ($argumentsUrl['page'] == 'user' && isset($argumentsUrl['changepassword'])) {
+                include 'pages/' . $argumentsUrl['page'] . '.php';
+        } else if ($argumentsUrl["page"] != "login") {
+            header('Location: ' . ROOT_DIR . 'login/');
         } else {
             include 'pages/' . $argumentsUrl['page'] . '.php';
         }
     } else {
-        header('Location: ' . ROOT_DIR . 'page/login/');
+        header('Location: ' . ROOT_DIR . 'login/');
     }
 } else { // Sinon, on affiche la page demandée
     if (isset($argumentsUrl['page'])) { // Si l'argument page est inclu dans l'url

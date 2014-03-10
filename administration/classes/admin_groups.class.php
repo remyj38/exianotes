@@ -103,7 +103,7 @@ class admin_groups {
     public function show_group_infos($id) { // Affichage de la page d'info d'un groupe
         global $page_content;
         global $popups;
-        $members = $this->getMembers($id);
+        $members = getMembers($id);
         $name = $this->getGroupName($id);
         if ($name) { // Si le groupe existe, on l'affiche
             $page_content .= '<h1>Liste des utilisateurs du groupe ' . $name . '</h1>

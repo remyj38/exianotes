@@ -36,21 +36,26 @@ function init_classes() { // Charges toutes les classes présentes dans le dossi
 function getArgumentsUrl() { // Récupère les arguments dans l'url
     if (isset($_GET["url"])) { // Si il y a un parametre d'url
         if ($_GET['url'] != NULL) { // Si les arguments de sont pas nuls
-        $temp = explode("/", $_GET["url"]); // On explose le parametre
-        if (count($temp) == 1 || $temp[1] == NULL) { // Si le tableau ne contient qu'un seul élément, on le retourne dans l'index page
-            $urls['page'] = $temp[0];
-        } else { // Sinon ...
-            for ($i = 0; $i < count($temp); $i+=2) { // Pour chaque élément du tableau
-                if (isset($temp[$i]) && isset($temp[$i + 1])) { // Si l'élément est suivi d'un autre
-                    $param = strtolower($temp[$i]);
-                    $valeur = strtolower($temp[$i + 1]);
-                    $urls[$param] = $valeur; // On garde les deux dans le tableau
+            $temp = explode("/", $_GET["url"]); // On explose le parametre
+            if (count($temp) == 1 || $temp[1] == NULL) { // Si le tableau ne contient qu'un seul élément, on le retourne dans l'index page
+                $urls['page'] = $temp[0];
+            } else { // Sinon ...
+                $start = 0;
+                if (!isset($urls['page']) && file_exists('pages/' . $temp[0] . '.php')) {
+                    $urls['page'] = $temp[0];
+                    $start = 1;
+                }
+                for ($i = $start; $i < count($temp); $i+=2) { // Pour chaque élément du tableau
+                    if (isset($temp[$i]) && isset($temp[$i + 1])) { // Si l'élément est suivi d'un autre
+                        $param = strtolower($temp[$i]);
+                        $valeur = strtolower($temp[$i + 1]);
+                        $urls[$param] = $valeur; // On garde les deux dans le tableau
+                    }
                 }
             }
-        }
-        if (isset($urls['admin']) && !isset($urls['page'])) {
-            $urls['page'] = 'admin';
-        }
+            if (isset($urls['admin']) && !isset($urls['page'])) {
+                $urls['page'] = 'admin';
+            }
         } else { // Sinon, on ne retourne rien
             return NULL;
         }
@@ -108,7 +113,7 @@ function register_ip() { // Sauvegarde l'ip utilisé à la connexion
     $connexion->execute(array(
         'user' => $_SESSION['Auth']['id_user'],
         'ip' => $ip,
-        'host' => gethostbyaddr($ip)
+        'host' => gethostbyaddr($_SERVER['REMOTE_ADDR'])
     ));
     $connexion->closeCursor();
     deleteIps(); // Suppression des ips en trop

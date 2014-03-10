@@ -1,6 +1,5 @@
 <?php
 $title = "Résumé";
-print_r($_SESSION['Auth']);
-
+$page_content .= '<a href="./admin/">Aller à l\'administration</a>';
 ?>
 

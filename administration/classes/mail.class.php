@@ -15,7 +15,7 @@ class mail {
         $corpsMail = "Bonjour " . $user['Uname'] . " " . $user['firstName'] . "<br />
 Un compte a été créé pour vous sur le site " . $site['name'] . ".<br />
 Afin de choisir votre mot de passe et valider votre compte, merci de cliquer sur le lien ci-dessous :<br />
-" . ROOT_DIR . "user/changepassword/" . $user['reinit_passwd'] . "<br />
+<a href=\"" . ROOT_DIR . "user/changepassword/" . $user['reinit_passwd'] . "/\">" . ROOT_DIR . "user/changepassword/" . $user['reinit_passwd'] . "/</a><br />
     <br />
 À bientôt sur " . $site['name'] . ".<br />
 <br />
@@ -31,7 +31,7 @@ Afin de choisir votre mot de passe et valider votre compte, merci de cliquer sur
         $corpsMail = "Bonjour " . $infos['name'] . " " . $infos['firstName'] . "<br />
 Un administrateur de " . $site['name'] . " a demandé une réinitialisation de mot de passe pour votre compte.<br />
 Afin de choisir votre nouveau mot de passe et pouvoir de nouveau vous connecter sur votre compte, merci de cliquer sur le lien ci-dessous :<br />
-" . ROOT_DIR . "user/changepassword/" . $infos['reinit_passwd'] . "<br />
+" . ROOT_DIR . "user/changepassword/" . $infos['reinit_passwd'] . "/<br />
     <br />
 À bientôt sur " . $site['name'] . ".<br />
 <br />
